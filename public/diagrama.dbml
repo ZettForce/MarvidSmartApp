@@ -1,0 +1,18 @@
+Table configuraciones {
+  id in [pk, increment] // Primary key
+  nombre varchar
+  descripcion varchar
+  direccion varchar
+  telefono varchar
+  correoElectronico varchar
+  web varchar
+  logo varchar
+  divisa varchar
+  cctClave varchar
+  incorporacionClave varchar
+  nombreDirector varchar
+  nombreSubdirector varchar
+  nombreControlEscolar varchar
+  facebook varchar
+  instagram varchar
+}
