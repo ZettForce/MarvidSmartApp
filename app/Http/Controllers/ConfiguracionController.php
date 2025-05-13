@@ -22,27 +22,22 @@ class ConfiguracionController extends Controller
 
     public function store(Request $request)
     {
-        // Lógica para almacenar la configuración
-        // Validar y guardar los datos en la base de datos
-        // $datos = request()->all();
-        // return response()->json($datos);
         $request->validate([
             'nombre_institucion' => 'required',
             'direccion' => 'required',
             'telefono' => 'required',
             'correoElectronico' => 'required|email',
-            'logo' => 'image|mimes:jpeg,png,jpg',
             'divisa' => 'required',
             'cctClave' => 'required',
             'incorporacionClave' => 'required',
             'nombreDirector' => 'required',
+            'logo' => 'image|mimes:jpeg,png,jpg',
         ]);
-        // return redirect()->route('admin.configuracion.index')->with('success', 'Configuración guardada correctamente.');
-        // BUSCAR si existe la configuración
-        $configuracion = configuracion::first();
+        //Buscar si existe configuracion
+        $configuracion = Configuracion::first();
 
         if ($configuracion) {
-            //Actualizar
+
             $configuracion->nombre_institucion = $request->nombre_institucion;
             $configuracion->direccion = $request->direccion;
             $configuracion->telefono = $request->telefono;
@@ -56,15 +51,45 @@ class ConfiguracionController extends Controller
             $configuracion->nombreDirector = $request->nombreDirector;
             $configuracion->nombreSubdirector = $request->nombreSubdirector;
             $configuracion->nombreControlEscolar = $request->nombreControlEscolar;
-            // Verificar si se subió un nuevo logo
+
             if ($request->hasFile('logo')) {
-                $file = $request->file('logo');
-                $filename = time() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('logos'), $filename);
-                $configuracion->logo = $filename;
+                if ($configuracion->logo) {
+                    unlink(public_path($configuracion->logo));
+                }
+                $logoPath = $request->file('logo')->store('logos' . 'public');
+                $configuracion->logo = '/storage/' . $logoPath;
+            }
+
+            $configuracion->save();
+            return redirect()->route('admin.configuracion.index')->with('success', 'Configuración guardada correctamente.');
+        } else {
+            //Crear nueva configuracion
+
+            $configuracion = new configuracion();
+            $configuracion->nombre_institucion = $request->nombre_institucion;
+            $configuracion->direccion = $request->direccion;
+            $configuracion->telefono = $request->telefono;
+            $configuracion->correoElectronico = $request->correoElectronico;
+            $configuracion->web = $request->web;
+            $configuracion->facebook = $request->facebook;
+            $configuracion->instagram = $request->instagram;
+            $configuracion->divisa = $request->divisa;
+            $configuracion->cctClave = $request->cctClave;
+            $configuracion->incorporacionClave = $request->incorporacionClave;
+            $configuracion->nombreDirector = $request->nombreDirector;
+            $configuracion->nombreSubdirector = $request->nombreSubdirector;
+            $configuracion->nombreControlEscolar = $request->nombreControlEscolar;
+
+            if ($request->hasFile('logo')) {
+                //Guardar nuevo logo
+                $logoPath = $request->file('logo');
+                $nombreArchivo = time() . '_' . $logoPath->getClientOriginalName();
+                $rutaDestino = public_path('uploads/logos');
+                $logoPath->move($rutaDestino, $nombreArchivo);
+                $configuracion->logo = 'uploads/logos/' . $nombreArchivo;
             }
             $configuracion->save();
-            return redirect()->route('admin.configuracion.index')->with('success', 'Configuración actualizada correctamente.');
+            return redirect()->route('admin.configuracion.index')->with('success', 'Configuración guardada correctamente.');
         }
     }
 }

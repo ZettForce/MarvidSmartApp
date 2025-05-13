@@ -25,16 +25,17 @@
                             <div class="col-md-4">
                                 <div class="mb-3 text-center">
                                     <!-- Etiqueta del campo -->
-                                    <label class="form-label">Logo de la escuela <b>(*)</b></label><br>
+                                    <label class="form-label">Logo de la escuela</label><br>
 
                                     <!-- Ícono separado que activa el input -->
                                     <i class="fas fa-upload" style="cursor: pointer; font-size: 2rem;"
-                                        onclick="document.getElementById('logoInput').click();">
+                                        onclick="document.getElementById('logos').click();">
                                     </i>
 
                                     <!-- Input file oculto -->
-                                    <input type="file" id="logoInput" name="logo" accept="image/*"
-                                        onchange="mostrarImagen(event)" style="display: none;">
+                                    <input type="file" class="form-control"
+                                        value="{{ old('logo', $configuracion->logo ?? '') }}" name="logo"
+                                        placeholder="Eliga una imagen..." onchange="mostrarImagen(event)" accept="image/*">
 
                                     <br>
                                     <img id="preview" style="max-width: 300px; margin-top: 10px;">
@@ -246,7 +247,7 @@
                                                 </div>
                                                 <input type="text" class="form-control"
                                                     value="{{ old('nombreDirector', $configuracion->nombreDirector ?? '') }}"
-                                                    name="nombreDirector" placeholder="Escriba aqui ...">
+                                                    name="nombreDirector" placeholder="Escriba aqui ..." required>
                                             </div>
                                             @error('nombreDirector')
                                                 <small style="color: red">{{ $message }}</small>
@@ -262,7 +263,7 @@
                                                 </div>
                                                 <input type="text" class="form-control"
                                                     value="{{ old('nombreSubdirector', $configuracion->nombreSubdirector ?? '') }}"
-                                                    name="nombreSubdirector" placeholder="Escriba aqui ...">
+                                                    name="nombreSubdirector" placeholder="Escriba aqui ..." required>
                                             </div>
                                             @error('nombreSubdirector')
                                                 <small style="color: red">{{ $message }}</small>
@@ -278,7 +279,7 @@
                                                 </div>
                                                 <input type="text" class="form-control"
                                                     value="{{ old('nombreControlEscolar', $configuracion->nombreControlEscolar ?? '') }}"
-                                                    name="nombreControlEscolar" placeholder="Escriba aqui ...">
+                                                    name="nombreControlEscolar" placeholder="Escriba aqui ..." required>
                                             </div>
                                             @error('nombreControlEscolar')
                                                 <small style="color: red">{{ $message }}</small>
